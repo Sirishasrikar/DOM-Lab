@@ -48,87 +48,63 @@ for (let i = 0; i < menuLinks.length; i++) {
     topMenuEl.appendChild(aEl);
 }
 
-//Lab 316.3.1
+// Part 4: Adding Menu Interaction
+// 1. Select and cache the all of the <a> elements inside of topMenuEl in a variable named topMenuLinks.
+const topMenulinks = topMenuEl.querySelectorAll('a');
 
-let subMenuEl = document.getElementById("sub-menu");
-console.log(subMenuEl);
-
-subMenuEl.style.backgroundColor = 'var(--sub-menu-bg)';
-subMenuEl.style.height = '100%';
-subMenuEl.classList.add("flex-around");
-subMenuEl.style.position = "absolute";
-subMenuEl.style.top = '0';
-
-// const topMenuEl = document.getElementById('topMenu');
-const topMenuLinks = topMenuEl.querySelectorAll('a');
-console.log(topMenuLinks);
-const topMenuLinksArray = Array.from(topMenuLinks);
-console.log(topMenuLinksArray);
-
+// 2. Attach a delegated 'click' event listener to topMenuEl.
 topMenuEl.addEventListener('click', function (event) {
-    event.preventDefault();
+    // The first line of code of the event listener function should call the event object's preventDefault() method.
+    // event.preventDefault();
 
-    const clickedEl = event.target.closest('a');
-    if (!clickedEl) return;
 
-    console.log(clickedEl.textContent);
+    //Lab 316.3.1
 
-    clickedEl.classList.toggle('active');
+    let subMenuEl = document.getElementById("sub-menu");
 
-    // const mainEl = document.getElementById('main');
-    // mainEl.innerHTML = '<h1>' + clickedEl.textContent + '</h1>';
-    // console.log(mainEl);
+    topMenuEl.addEventListener('click', function (event) {
+        subMenuEl.innerHTML = '';
 
-    // clickedEl.classList.toggle('active');
-    topMenuLinks.forEach(function (link) {
-        if (link !== clickedEl) {
-            link.classList.remove('active');
+        var clickedMenuName = event.target.text;
+
+        for (let i = 0; i < menuLinks.length; i++) {
+            let linkItem = menuLinks[i];
+
+            if (clickedMenuName == linkItem.text) {
+                var subMenuLinks = linkItem.subLinks;
+
+                console.log("subMenuLinks.length " + subMenuLinks.length)
+
+                for (k = 0; k < subMenuLinks.length; k++) {
+                    let aE2 = document.createElement('a');
+                    aE2.setAttribute('href', subMenuLinks[k].href);
+                    aE2.textContent = subMenuLinks[k].text;
+                    subMenuEl.appendChild(aE2);
+                }
+            }
         }
-    });
 
 
-    if (!clickedEl.classList.contains('active')) {
-        if (clickedEl.dataset.link !== 'about' && clickedEl.dataset.subLinks) {
-            subMenuEl.style.top = '100%';
-            buildSubmenu(JSON.parse(clickedEl.dataset.subLinks));
+        if (subMenuEl.style.display == "block") {
+            subMenuEl.style.display = "none";
+
         } else {
-            subMenuEl.style.top = '0';
+            subMenuEl.style.backgroundColor = 'var(--sub-menu-bg)';
+            subMenuEl.style.height = '100%';
+            subMenuEl.classList.add("flex-around");
+            subMenuEl.style.display = "block";
         }
-    }
-    // buildSubmenu(clickedEl.dataset.subLinks);
+    })
 
-    // function buildSubmenu(subLinks) {
-    //     subMenuEl.innerHTML = '';
-    //     if (subLinks){
-    //             subLinks.forEach(function(link) {
-    //             const submenuLink = document.createElement('a');
-    //             submenuLink.setAttribute('href', link.href);
-    //             submenuLink.textContent = link.text;
-    //             subMenuEl.appendChild(submenuLink);
-    //         });
-    //     }
-    // }
+
     function buildSubmenu(subLinks) {
+
         subMenuEl.innerHTML = ''; // Clear current contents of submenu
         subLinks.forEach(function (link) {
             const submenuLink = document.createElement('a');
             submenuLink.setAttribute('href', link.href);
             submenuLink.textContent = link.text;
             subMenuEl.appendChild(submenuLink); // Append submenu link to submenu
-        });
+        })
     }
 });
-
-subMenuEl.addEventListener('click', function (event) {
-    event.preventDefault();
-
-    const clickedEl = event.target.closest('a');
-    if (!clickedEl) return;
-
-    subMenuEl.style.top = '0';
-
-    topMenuLinks.forEach(function (link) {
-        link.classList.remove('active');
-    });
-});
-
